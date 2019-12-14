@@ -1,18 +1,23 @@
-version: "2"
+version: "1.22"
+db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: nodejs_api_db
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
 services:
   Nodejs_Api_Postgres: 
     image: karthikjilla/Nodejs_Api_Postgres
     ports: 
-      - 80:3000
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; npm start'
+      - '80:3000'
     depends_on:
       - db
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; npm start'
     environment:
-      - DATABASE_URL=postgres://postgres:password@db:5432/nodejs_api_db
+      DATABASE_URL: postgres://postgres:password@db:5432/nodejs_api_db
       - PORT=3000   
-  db:
-    image: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=nodejs_api_db
+  
